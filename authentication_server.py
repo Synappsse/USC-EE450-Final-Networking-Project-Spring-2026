@@ -42,7 +42,6 @@ def accessUsers():
 knownUsers = accessUsers()
 
 # #****************************************************************************
-# Resources Used: bgnet0_usl_c_1_2025.pdf - Chapter 15.8.1 
 # Purpose: Define constants and bind the UDP socket.
 # #****************************************************************************
 HOST = '127.0.0.1' # Needed static port assignment  
