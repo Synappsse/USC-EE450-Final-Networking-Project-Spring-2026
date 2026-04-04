@@ -59,7 +59,7 @@ def addNewPres(docName, patHash, treatment, frequency):
 HOST = '127.0.0.1' 
 UDP_PORT = 22916 #My SID
 
-sock = socket.socket(type=socket.SOCK_DGRAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((HOST, UDP_PORT))
 
 #Boot message test

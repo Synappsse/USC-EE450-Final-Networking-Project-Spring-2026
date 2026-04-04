@@ -48,7 +48,7 @@ HOST = '127.0.0.1' # Needed static port assignment
 UDP_PORT = 21916 # 916 are the last 3 digit of my SID
 
 # Set up a UDP socket and bind the socket to the port
-sock = socket.socket(type=socket.SOCK_DGRAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((HOST, UDP_PORT))
 print(f"Authentication Server is up and running using UDP on port {UDP_PORT}.") # Send out a simple boot up message to let user know succesful compile
 
