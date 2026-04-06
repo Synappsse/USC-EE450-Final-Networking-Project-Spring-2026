@@ -1,6 +1,6 @@
 import socket
 import sys
-import hashlib #Optional built in use for Python hashing
+import hashlib 
 
 #****************************************************************************
 # Resources Used: Instructions pdf from Brightspace
