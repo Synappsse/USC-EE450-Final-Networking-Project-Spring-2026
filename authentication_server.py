@@ -39,7 +39,6 @@ def accessUsers():
     
     return userDict
 
-knownUsers = accessUsers()
 
 # #****************************************************************************
 # Purpose: Define constants and bind the UDP socket.
@@ -56,9 +55,14 @@ print(f"Authentication Server is up and running using UDP on port {UDP_PORT}.") 
 # Resources Used: bgnet0_usl_c_1_2025.pdf - Chapter 15.8.1 (Basic socket stuff and how to send reply back)
 # Purpose: Keep the authentication server running to catch any login attempts
 # #****************************************************************************
+
+
+
+knownUsers = accessUsers() #Set up the known users based on our current users.txt file
 try:
 
     #Contimue to pull data from the socket and split every string to hash properly
+    #Once we recieve a piece of information to try, we will begin to check it
     while True:
         data, sender = sock.recvfrom(1024)
         request_str = data.decode('utf-8')
