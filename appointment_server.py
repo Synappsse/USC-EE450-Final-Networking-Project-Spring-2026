@@ -205,7 +205,9 @@ try:
 
                         updateSchedule(schedule) #Force the program to update the appointment.txt file with the new schedule
                         response = f"SUCCESS,{doc},{timeBlock}"
-                        print(f"Appointment Server has received a cancel appointment command for the user with hash suffix: {suffixHash}. Successfully canceled appointment.")
+
+                        #Update to pdf wants “Successfully cancelled appointment." instead of “Successfully canceled appointment.”?
+                        print(f"Appointment Server has received a cancel appointment command for the user with hash suffix: {suffixHash}. Successfully cancelled appointment.")
                         break
                 
                 if found == True: 

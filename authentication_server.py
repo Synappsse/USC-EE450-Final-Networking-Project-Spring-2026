@@ -56,8 +56,6 @@ print(f"Authentication Server is up and running using UDP on port {UDP_PORT}.") 
 # Purpose: Keep the authentication server running to catch any login attempts
 # #****************************************************************************
 
-
-
 knownUsers = accessUsers() #Set up the known users based on our current users.txt file
 try:
 
