@@ -63,17 +63,25 @@ try:
         clientSock.close()
         sys.exit(0) # End the program so they have to run it again, per instructions
 
-
 #****************************************************************************
-# Purpose:Main loop for client once authenticated into our system.
-#Here we can run apts, look for precriptions, lookup doctors etc.
+# Purpose: Begin main loop once user role designated 
 #****************************************************************************
 
+    while True:
+        # Take in the next command once authenticated then split it properly and force all lowercase for easier checking
+        userInput = input("\nPlease enter a command: ").strip()
+        cmdParts = userInput.split()
+        mainCmd = cmdParts[0].lower() 
+        
 
-#WIll leave for tomorrow
-
-
-
+        #Basic quit command
+        if mainCmd == "quit":
+            print("You have successfully been logged out.")
+            print("-Quit Program-")
+            break
+               
+                
+ 
 
 #Basic error handling or Ctrl C interrupt     
 except ConnectionRefusedError:
