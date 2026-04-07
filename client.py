@@ -73,6 +73,49 @@ try:
         cmdParts = userInput.split()
         mainCmd = cmdParts[0].lower() 
         
+        #Check first to see the userrole before processing their needs
+        #If the user is not a patient we will simply move onto to check if they are a doctor
+        #If the command is not user specific, the command will be passed on 
+        if userRole == "patient":
+            
+            if mainCmd == "view_appointment":
+                pass
+           
+            elif mainCmd == "view_prescription":
+                pass
+           
+            elif mainCmd == "lookup":
+                pass
+           
+            elif mainCmd == "schedule":
+                pass
+           
+            elif mainCmd == "cancel":
+                pass
+    
+            elif mainCmd == "help":
+                print("Please enter the command:\n<lookup>,\n<lookup <doctor>>,\n<schedule <doctor> <start_time> <illness>>,\n<cancel>,\n<view_appointment>,\n<view_prescription>,\n<quit>")
+           
+            else:
+                print("Invalid command. Please type 'help' to see the available options.")
+
+        #Doctor commands
+        elif userRole == "doctor":
+           
+            if mainCmd == "view_appointments":
+                pass
+           
+            elif mainCmd == "view_prescription":
+                pass
+           
+            elif mainCmd == "prescribe":
+                pass
+            
+            elif mainCmd == "help":
+                 print("Please enter the command:\n<view_appointments>,\n<prescribe <patient> <frequency>>,\n<view_prescription <patient>>,\n<quit>")
+           
+            else:
+                print("Invalid command. Please type 'help' to see the available options.")
 
         #Basic quit command
         if mainCmd == "quit":
