@@ -39,6 +39,13 @@ D)
 
 
 E)
+
+Formatting:
+	Authentication (Client -> Hospital -> Auth Server): 
+		<username_hash>,<password_hash>
+		#This specifically must have a "" around the password if there is a !
+		#Though generally I did not use "" for the input
+
 F)
 
 Obviously, the code will fail if you do not run the servers in the correct order. You also should not be missing any of the .txt or .py files. I did not make any extra .h files.
@@ -56,4 +63,7 @@ Most of the socket and network logic comes from the Beej's Guide to Network cont
 
 Lastly, I wanted to mention that some of the code I typed is built off of my knowledge from EE250 and ITP/TAC 115. This may include the way I created the sockets and added comments in regards to purpose/resources used for a block of code. I did not directly copy/paste anything from them but did use it as a base. The code should be the same/similar as the Beej Guides.
 
-H)
+H)     
+
+I built the code on Windows 11 and tested on the docker container, editing as I go.                 
+        
