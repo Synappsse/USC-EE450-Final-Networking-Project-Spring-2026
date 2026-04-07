@@ -28,13 +28,13 @@ All of my work and documentation can be found at: https://github.com/Synappsse/U
 D)
 
 	authentication_server.py:
-			Authenticates hashed credentials that are given by comparing them to 				users.txt. Does not edit users.txt.
+			Authenticates hashed credentials that are given by comparing them to users.txt. Does not edit users.txt.
 
 	appointment_server.py:
-			Opens and parses the appointments.txt files in order to manage client 				requests for looking up doctors as well as scheduling and cancelling 				appointments. Edits appointments.txt based on new updates.
+			Opens and parses the appointments.txt files in order to manage client requests for looking up doctors as well as scheduling and cancelling 							appointments. Edits appointments.txt based on new updates.
 
 	prescriptions_server.py:
-			Opens the prescriptions.txt file to look at and return specific patient 			prescriptions. Updates the txt file based on changes to the patients 				prescription list.
+			Opens the prescriptions.txt file to look at and return specific patient prescriptions. Updates the txt file based on changes to the patients 						prescription list.
 	
 
 
