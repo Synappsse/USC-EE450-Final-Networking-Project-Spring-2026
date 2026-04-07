@@ -11,20 +11,18 @@ def sha256_hash(text: str) -> str:
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 #****************************************************************************
-# Resources Used: Instructions pdf from Brightspace
-# Purpose: Removes white/trailing space and allows me to use the SHA256 stuff
+# Purpose: Grab the authentication request from the client.py startup arg
 #****************************************************************************
-# 1. Grab command line arguments
+# Grab command line arguments
 # sys.argv[0] is the script name, sys.argv[1] is username, sys.argv[2] is password
 if len(sys.argv) != 3:
     print("Usage: python client.py <username> <password>")
     sys.exit(1)
 
-# Store the raw username for our print statements
+# Store the raw username/password for our print statements
+# Hash them immediately to send over the network
 username = sys.argv[1]
 password = sys.argv[2]
-
-# Hash them immediately to send over the network
 userHash = sha256_hash(username)
 passHash = sha256_hash(password)
 
