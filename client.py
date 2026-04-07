@@ -73,19 +73,67 @@ try:
         cmdParts = userInput.split()
         mainCmd = cmdParts[0].lower() 
         
+
+        #Basic quit command
+        if mainCmd == "quit":
+            print("You have successfully been logged out.")
+            print("-Quit Program-")
+            break
+
         #Check first to see the userrole before processing their needs
         #If the user is not a patient we will simply move onto to check if they are a doctor
         #If the command is not user specific, the command will be passed on 
         if userRole == "patient":
             
             if mainCmd == "view_appointment":
-                pass
+                print(f"{username} sent a request to view their appointment to the Hospital Server.")
+                msg = "VIEW_PAT," + userHash
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if replyParts[0] == "FOUND":
+                    print(f"You have an appointment scheduled with {replyParts[1]} at {replyParts[2]}.")
+                else:
+                    print("You do not have an appointment today.")
            
             elif mainCmd == "view_prescription":
-                pass
+                print(f"{username} sent a request to view their prescription to the Hospital Server.")
+                # Using VIEW_RX_PAT so the hospital knows it's the patient asking
+                msg = "VIEW_RX_PAT," + userHash
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if replyParts[0] == "FOUND":
+                    # If frequency is 'None', the print is slightly different per the rubric
+                    if replyParts[3] == "None":
+                         print(f"You were not prescribed any treatment by {replyParts[1]} following your diagnosis.")
+                    else:
+                         print(f"You have been prescribed {replyParts[2]}, to be taken {replyParts[3]}, by {replyParts[1]}.")
+                else:
+                    print("You do not have a prescription to look up.")
            
             elif mainCmd == "lookup":
-                pass
+                if len(cmdParts) == 1:
+                    print(f"{username} sent a lookup request to the hospital server.")
+                    msg = "LOOKUP," + userHash
+                    clientSock.send(msg.encode('utf-8'))
+                    
+                    reply = clientSock.recv(1024).decode('utf-8')
+                    print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}.")
+                    
+                    replyParts = reply.split(",")
+                    if replyParts[0] == "AVAILABLE_DOCS":
+                        print("The following doctors are available:")
+                        for i in range(1, len(replyParts)):
+                            print(replyParts[i])
+                    else:
+                        print("No doctors are currently available.")
            
             elif mainCmd == "schedule":
                 pass
@@ -117,11 +165,7 @@ try:
             else:
                 print("Invalid command. Please type 'help' to see the available options.")
 
-        #Basic quit command
-        if mainCmd == "quit":
-            print("You have successfully been logged out.")
-            print("-Quit Program-")
-            break
+      
                
                 
  

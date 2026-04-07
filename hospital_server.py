@@ -132,5 +132,28 @@ try:
             clientConn.send(clientReply.encode('utf-8'))
             print(f"Hospital Server has sent the response from Authentication Server to the client using TCP over port {TCP_PORT}.")
 
-    tcpSock.close()
-    udpSock.close()
+
+        #****************************************************************************        
+        # Purpose: Manage the client commands after successfully authenticating. 
+        # Communicates with the apt server to get this done
+        #****************************************************************************
+        
+        elif cmd == "LOOKUP" and len(parts) == 2:
+            patHash = parts[1]
+            suffixHash = patHash[-5:] # Grab the last 5 characters for our prints
+            
+            
+            print(f"Hospital Server received a lookup request from a user with a hash suffix {suffixHash} over port {TCP_PORT}.")
+            udpMessage = "LOOKUP_ALL"
+            udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
+            print("Hospital Server sent the doctor lookup request to the Appointment server.")
+            
+            # 3. Wait to catch the reply from the appointment server and then send it back to the client
+            aptReplyBytes, aptSender = udpSock.recvfrom(1024)
+            aptReply = aptReplyBytes.decode('utf-8')
+            print(f"Hospital Server has received the response from Appointment Server using UDP over port {UDP_PORT}.")
+            clientConn.send(aptReply.encode('utf-8'))
+            print("Hospital Server has sent the doctor lookup to the client.")
+
+       
+
