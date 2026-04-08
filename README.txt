@@ -57,6 +57,9 @@ G)
 
 I copy pasted the Sha256 hash for Python from the instruction pdf.
 
+I did look online about Makefiles as it has been a while since I made one. I used the provided website on the pdf: https://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html.
+I also looked online because I wasn't sure on how to set it up for Python running on Ubuntu specifically. 
+
 I used some of Beej's guide for Python such as the striping/splitting functions. It has been a little while since I wrote a program in Python and needed a refresher on basic functions.
 
 Most of the socket and network logic comes from the Beej's Guide to Network content shared on the Brightspace. This includes the sending/receiving from/sendall functions. I added comments explaining what chapter I pulled some of these from in the programs.

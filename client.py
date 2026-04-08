@@ -177,18 +177,64 @@ try:
            
             else:
                 print("Invalid command. Please type 'help' to see the available options.")
-
-        #Doctor commands
+                
         elif userRole == "doctor":
            
             if mainCmd == "view_appointments":
-                pass
+                print(f"{username} sent a request to view their scheduled appointments to the Hospital Server.")
+                msg = "VIEW_DOC," + username 
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if replyParts[0] == "BOOKED":
+                    print(f"{username} is scheduled at times:")
+                    for i in range(1, len(replyParts)):
+                        print(replyParts[i])
+                else:
+                    print("You do not have any appointments scheduled.")
            
-            elif mainCmd == "view_prescription":
-                pass
+            elif mainCmd == "view_prescription" and len(cmdParts) == 2:
+                patName = cmdParts[1]
+                patHash = sha256_hash(patName) # Hash the patient's name!
+                
+                print(f"{username} sent a request to view {patName} prescription to the Hospital Server.")
+                msg = "VIEW_RX_DOC," + username + "," + patHash
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if replyParts[0] == "FOUND":
+                    docWhoPrescribed = replyParts[1]
+                    treatment = replyParts[2]
+                    freq = replyParts[3]
+                    print(f"{patName} has been prescribed {treatment}, to be taken {freq}, by {docWhoPrescribed}.")
+                else:
+                    print(f"{patName} does not have a prescription.")
            
-            elif mainCmd == "prescribe":
-                pass
+            elif mainCmd == "prescribe" and len(cmdParts) == 3:
+                patName = cmdParts[1]
+                freq = cmdParts[2]
+                patHash = sha256_hash(patName) # Hash the patient's name!
+                
+                print(f"{username} sent a request to the Hospital Server to prescribe {patName} following their diagnosis.")
+                
+                msg = "PRESCRIBE," + username + "," + patHash + "," + freq
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if replyParts[0] == "SUCCESS":
+                    treatment = replyParts[1]
+                    print(f"You have successfully prescribed {patName} with {treatment}, to be taken {freq}.")
+                else:
+                    print("Prescription failed.")
             
             elif mainCmd == "help":
                  print("Please enter the command:\n<view_appointments>,\n<prescribe <patient> <frequency>>,\n<view_prescription <patient>>,\n<quit>")
