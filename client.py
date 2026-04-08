@@ -134,13 +134,44 @@ try:
                             print(replyParts[i])
                     else:
                         print("No doctors are currently available.")
-           
-            elif mainCmd == "schedule":
-                pass
+            
+            elif mainCmd == "schedule" and len(cmdParts) == 4:
+                docName = cmdParts[1]
+                timeBlock = cmdParts[2]
+                illness = cmdParts[3]
+                
+                print(f"{username} sent an appointment schedule request to the hospital server.")
+                msg = "SCHEDULE," + docName + "," + timeBlock + "," + illness + "," + userHash
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the Hospital Server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if reply == "SUCCESS":
+                    print(f"An appointment has been successfully scheduled for patient {username} with {docName} at {timeBlock}.")
+                elif replyParts[0] == "UNAVAILABLE":
+                    if len(replyParts) > 1 and replyParts[1] != "NONE":
+                        print(f"Unable to schedule an appointment with {docName} at {timeBlock}. Other available time blocks are")
+                        for i in range(1, len(replyParts)):
+                            print(replyParts[i])
+                    else:
+                        print(f"Unable to schedule an appointment with {docName} at this time, as all time blocks have been taken up.")
            
             elif mainCmd == "cancel":
-                pass
-    
+                print(f"{username} sent a cancellation request to the Hospital Server.")
+                msg = "CANCEL," + userHash
+                clientSock.send(msg.encode('utf-8'))
+                
+                reply = clientSock.recv(1024).decode('utf-8')
+                print(f"The client received the response from the Hospital Server using TCP over port {clientSock.getsockname()[1]}")
+                
+                replyParts = reply.split(",")
+                if replyParts[0] == "SUCCESS":
+                    print(f"You have successfully cancelled your appointment with {replyParts[1]} at {replyParts[2]}.")
+                else:
+                    print("You have no appointments available to cancel.")
+        
             elif mainCmd == "help":
                 print("Please enter the command:\n<lookup>,\n<lookup <doctor>>,\n<schedule <doctor> <start_time> <illness>>,\n<cancel>,\n<view_appointment>,\n<view_prescription>,\n<quit>")
            

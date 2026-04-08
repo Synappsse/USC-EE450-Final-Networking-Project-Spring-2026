@@ -112,11 +112,12 @@ try:
             authReply = authReplyBytes.decode('utf-8')
             print(f"Hospital server has received the response from the authentication server using UDP over port {UDP_PORT}.")
             
-            
+                            
+            #Once we can approve the authentication request we need to move on to client roles
+            #Designate whether the client is a patient or a doctor based on their appearance in the hospital.txt file
             if authReply == "SUCCESS":
                 print(f"User with a hash suffix {suffixHash} has been granted access to the system. Determining the access of the user.")
                 
-                #Designate whether the client is a patient or a doctor based on their appearance in the hospital.txt file
                 if nameHash in doctors:
                     print(f"User with hash suffix {suffixHash} will be granted doctor access.")
                     clientReply = "SUCCESS_DOC"
@@ -134,26 +135,127 @@ try:
 
 
         #****************************************************************************        
-        # Purpose: Manage the client commands after successfully authenticating. 
-        # Communicates with the apt server to get this done
+        # Purpose: Help the client lookup all available doctors at the moment. 
+        #This will be done by taking the patients request and directly sending it
+        #To the auth server, which will provide the list of available doctors.
         #****************************************************************************
-        
         elif cmd == "LOOKUP" and len(parts) == 2:
             patHash = parts[1]
-            suffixHash = patHash[-5:] # Grab the last 5 characters for our prints
+            suffixHash = patHash[-5:] 
             
-            
+            #Let server know we are awaiting lookup results
             print(f"Hospital Server received a lookup request from a user with a hash suffix {suffixHash} over port {TCP_PORT}.")
+            
             udpMessage = "LOOKUP_ALL"
             udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
             print("Hospital Server sent the doctor lookup request to the Appointment server.")
             
-            # 3. Wait to catch the reply from the appointment server and then send it back to the client
+            #Await reply from the apt server
             aptReplyBytes, aptSender = udpSock.recvfrom(1024)
             aptReply = aptReplyBytes.decode('utf-8')
+           
+           #Once the reply from the apt server is recieved, let the client know and send the data
             print(f"Hospital Server has received the response from Appointment Server using UDP over port {UDP_PORT}.")
             clientConn.send(aptReply.encode('utf-8'))
             print("Hospital Server has sent the doctor lookup to the client.")
 
-       
+        #****************************************************************************        
+        # Purpose: Help the client lookup a specific doctor (Patients only).
+        #This will be done by sending a req to the apt server and hashing
+        #the clients command into multiple parts to look for only 1 doctor at a time.
+        #****************************************************************************
+        elif cmd == "LOOKUP_DOC" and len(parts) == 3:
+            docName = parts[1]
+            patHash = parts[2]
+            suffixHash = patHash[-5:]
+            
+            print(f"Hospital Server has received a lookup request from a user with hash suffix {suffixHash} to lookup {docName} availability using TCP over port {TCP_PORT}.")
+            
+            # Forward the specific doctor lookup to the appointment server
+            udpMessage = "LOOKUP_DOC," + docName
+            udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
+            print("Hospital Server sent the doctor lookup request to the Appointment server.")
+            
+            aptReplyBytes, aptSender = udpSock.recvfrom(1024)
+            aptReply = aptReplyBytes.decode('utf-8')
+            print(f"Hospital Server has received the response from Appointment Server using UDP over port {UDP_PORT}.")
+            
+            clientConn.send(aptReply.encode('utf-8'))
+            print("The Hospital Server has sent the response to the client.")
 
+          #****************************************************************************        
+        # Purpose: Assist the client with scheduling an apt with a requested doctor.
+        #This will be done by splitting their request into different variables that
+        #The apt server will then confirm the apt or let the patient know of any issues.
+        #****************************************************************************
+        elif cmd == "SCHEDULE" and len(parts) == 5:
+            docName = parts[1]
+            timeBlock = parts[2]
+            illness = parts[3]
+            patHash = parts[4]
+            suffixHash = patHash[-5:]
+            print(f"Hospital Server has received a schedule request from a user with hash suffix: {suffixHash} to book an appointment using TCP over port {TCP_PORT}.")
+            
+            #Send over a formatted version of the client's request to the apt server
+            udpMessage = "SCHEDULE," + docName + "," + timeBlock + "," + patHash + "," + illness
+            udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
+
+            print("Hospital Server has sent the schedule request to the appointment server.")
+            
+            aptReplyBytes, aptSender = udpSock.recvfrom(1024)
+            aptReply = aptReplyBytes.decode('utf-8')
+            print(f"Hospital Server has received the response from Appointment Server using UDP over {UDP_PORT}.")
+            
+            clientConn.send(aptReply.encode('utf-8'))
+            print("The hospital server has sent the response to the client.")
+
+          #****************************************************************************        
+        # Purpose: Help the client cancel an appointment they already have/made.
+        #Will do this by opening the patient request then pushing it to the apt server
+        #****************************************************************************
+        elif cmd == "CANCEL" and len(parts) == 2:
+            patHash = parts[1]
+            suffixHash = patHash[-5:]
+            
+            print(f"Hospital Server has received a cancel request from user with hash suffix: {suffixHash} to cancel their appointment using TCP over port {TCP_PORT}.")
+            
+            udpMessage = "CANCEL," + patHash
+            udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
+            print("The hospital server has sent the cancel request to the appointment server.")
+            
+            aptReplyBytes, aptSender = udpSock.recvfrom(1024)
+            aptReply = aptReplyBytes.decode('utf-8')
+            print(f"Hospital Server has received the response from Appointment Server using UDP over port {UDP_PORT}.")
+            
+            clientConn.send(aptReply.encode('utf-8'))
+            print("The hospital server has sent the response to the client.")
+
+         #****************************************************************************        
+        # Purpose: Help the patient lookup a specific apt 
+        #****************************************************************************
+        elif cmd == "VIEW_PAT" and len(parts) == 2:
+            patHash = parts[1]
+            suffixHash = patHash[-5:]
+            
+            print(f"Hospital server has received a view appointment request from a user with hash suffix {suffixHash} to view their appointment details using TCP over port {TCP_PORT}.")
+            
+            udpMessage = "VIEW_PAT," + patHash
+            udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
+            print("Hospital Server has sent the view appointments request to the Appointment Server.")
+            
+            aptReplyBytes, aptSender = udpSock.recvfrom(1024)
+            aptReply = aptReplyBytes.decode('utf-8')
+            print(f"Hospital Server has received the response from the appointment server using UDP over port {UDP_PORT}.")
+            
+            clientConn.send(aptReply.encode('utf-8'))
+            print("The hospital server has sent the response to the client.")
+        
+       
+        clientConn.close()
+
+# Basic Ctrl C interrupt 
+except KeyboardInterrupt:
+    print("\nShutting down Hospital Server...")
+finally: 
+    tcpSock.close()
+    udpSock.close()
