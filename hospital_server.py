@@ -346,7 +346,6 @@ def handle_client(clientConn):
 # Purpose: Main Server Loop 
 #****************************************************************************
 try:
-    print(f"Hospital Server is waiting for clients...")
     while True:
         clientConn, clientAddr = tcpSock.accept()
         client_thread = threading.Thread(target=handle_client, args=(clientConn,))
