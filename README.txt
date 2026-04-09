@@ -64,6 +64,8 @@ I used some of Beej's guide for Python such as the striping/splitting functions.
 
 Most of the socket and network logic comes from the Beej's Guide to Network content shared on the Brightspace. This includes the sending/receiving from/sendall functions. I added comments explaining what chapter I pulled some of these from in the programs.
 
+I especially had no clue what to do about running multiple clients at once. I used the Beej's guide to learn about threading. 
+
 Lastly, I wanted to mention that some of the code I typed is built off of my knowledge from EE250 and ITP/TAC 115. This may include the way I created the sockets and added comments in regards to purpose/resources used for a block of code. I did not directly copy/paste anything from them but did use it as a base. The code should be the same/similar as the Beej Guides.
 
 H)     

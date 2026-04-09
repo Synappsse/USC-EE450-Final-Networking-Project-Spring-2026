@@ -107,7 +107,6 @@ try:
             for rx in allPrescriptions:
                 if rx["patientHash"] == patHash:
                     foundRx = rx
-                    break
                     
             if foundRx == None or foundRx["frequency"] == "None":
                 print("There are no current prescriptions for this user.")
