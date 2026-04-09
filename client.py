@@ -118,8 +118,11 @@ try:
                 else:
                     print("You do not have a prescription to look up.")
            
+           
             elif mainCmd == "lookup":
+                # Plain lookup for all doctors
                 if len(cmdParts) == 1:
+
                     print(f"{username} sent a lookup request to the hospital server.")
                     msg = "LOOKUP," + userHash
                     clientSock.send(msg.encode('utf-8'))
@@ -128,12 +131,42 @@ try:
                     print(f"The client received the response from the hospital server using TCP over port {clientSock.getsockname()[1]}.")
                     
                     replyParts = reply.split(",")
+                    
+                    #If we do pull something, then show our client what doctor is available
                     if replyParts[0] == "AVAILABLE_DOCS":
                         print("The following doctors are available:")
+                        
                         for i in range(1, len(replyParts)):
                             print(replyParts[i])
                     else:
                         print("No doctors are currently available.")
+                        
+                # Lookup for specific doctor
+                elif len(cmdParts) == 2:
+
+                    docName = cmdParts[1]
+                    print(f"Patient {username} sent a lookup request to the hospital server for {docName}.")
+                    
+                    msg = "LOOKUP_DOC," + docName + "," + userHash
+                    clientSock.send(msg.encode('utf-8'))
+                    
+                    reply = clientSock.recv(1024).decode('utf-8')
+                    print(f"The client received the response from the Hospital Server using TCP over port {clientSock.getsockname()[1]}.")
+                    
+                    replyParts = reply.split(",")
+                   
+                    if reply == "ALL_AVAILABLE":
+                        
+                        print(f"All time blocks are available for {docName}.")
+                    
+                    elif replyParts[0] == "AVAILABLE":
+                        print(f"{docName} is available at times:")
+                       
+                        for i in range(1, len(replyParts)):
+                            print(replyParts[i])
+                    
+                    elif reply == "NONE_AVAILABLE" or reply == "NOT_FOUND":
+                        print(f"{docName} has no time slots available.")
             
             elif mainCmd == "schedule" and len(cmdParts) == 4:
                 docName = cmdParts[1]
