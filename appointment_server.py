@@ -50,7 +50,8 @@ def updateSchedule(schedDict):
     #Go through each doctor/timeblok and update accordingly
     for doc in schedDict:
         aptFile.write(doc + "\n")
-        
+        #Go through the doctors timeblocks and write it down in the details variable
+        #Show what the doctor has
         for timeBlock in schedDict[doc]:
             details = schedDict[doc][timeBlock] 
             if details != None:
@@ -91,13 +92,14 @@ try:
       
         #Basic lookup command of all doctors and their available time slots 
         if cmd == "LOOKUP_ALL" and len(parts) == 1:
-            # Updated to match Table 4 exactly
             print("The Appointment Server has received a doctor availability request.")
             availableDocs = ""
             
             # Loop through every doctor to see if they have at least one open slot
             for doc in schedule:
                 hasFreeSlot = False
+                #Will keep looping through the timeblock of a specific doctor until something is
+                #found or until we reach the end with no success
                 for timeBlock in schedule[doc]:
                     if schedule[doc][timeBlock] == None:
                         hasFreeSlot = True
@@ -121,10 +123,13 @@ try:
             print("The Appointment Server has received a doctor availability request.")
             
             #If the doctor exists, lookup their availability
+            #Init some variable to take count of said availability
             if docName in schedule:
                 freeTimes = ""
                 freeCount = 0
+                #Loop through the doctor's schedule and update the new variables based on findings
                 for t in schedule[docName]:
+
                     if schedule[docName][t] == None:
                         freeTimes = freeTimes + t + ","
                         freeCount = freeCount + 1 #Update the doctor's availability in our variable and prepare to send to client
@@ -142,10 +147,10 @@ try:
                 else:
                     print(f"{docName} has no time slots available.")
                     response = "NONE_AVAILABLE"
+
             else: #If the doctor DNE, act like they have no available time slots
                 print(f"{docName} has no time slots available.")
                 response = "NOT_FOUND"
-                
             
             print("The Appointment Server has sent the lookup result to the Hospital Server.")
 
@@ -163,25 +168,27 @@ try:
             #Confirm that doctor exists, and is on the schedule currently
             if docName in schedule and timeBlock in schedule[docName]:
                 
-                
                 #Confirms that the doctor is available at the requested time of patient
                 if schedule[docName][timeBlock] == None:
                     schedule[docName][timeBlock] = (patHash, illness)
-                    updateSchedule(schedule)
+                    updateSchedule(schedule) #If the schedule is succesfully run then we can update the .txt file
                     print(f"Appointment has been scheduled successfully for user {suffixHash} with {docName}.")
                     response = "SUCCESS"
                 
                 else:
                     print("The requested appointment time is not available.")
                     freeTimes = ""
+                    #Loop through the doctor's times to output a list of other options for the epatient
                     for t in schedule[docName]:
                         if schedule[docName][t] == None:
-                            freeTimes = freeTimes + t + "," #Update the list of available times to offer the patient
+                            freeTimes = freeTimes + t + "," #Update the list of available times 
                             
                     if freeTimes != "": #If there are already free times for the doctor, let the user know that they have other options
                         freeTimes = freeTimes[:-1]
                         response = "UNAVAILABLE," + freeTimes
-                    else:#If the doctor is booked, just say nothing
+                   
+                   #If the doctor is booked, just say nothing 
+                    else:
                         response = "UNAVAILABLE,NONE"
             else:
                 response = "FAIL"
