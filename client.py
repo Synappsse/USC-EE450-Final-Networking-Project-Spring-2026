@@ -142,7 +142,8 @@ try:
                         print("No doctors are currently available.")
                         
                 # Lookup for specific doctor
-                elif len(cmdParts) == 2:
+                #Checked to see if length of command is 2 or 3 parts in case someone types Dr.X or Dr. X
+                elif len(cmdParts) == 2 or len(cmdParts) == 3:
 
                     docName = cmdParts[1]
                     print(f"Patient {username} sent a lookup request to the hospital server for {docName}.")
