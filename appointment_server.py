@@ -90,7 +90,7 @@ try:
 
       
         #Basic lookup command of all doctors and their available time slots 
-        if cmd == "LOOKUP" and len(parts) == 1:
+        if cmd == "LOOKUP_ALL" and len(parts) == 1:
             # Updated to match Table 4 exactly
             print("The Appointment Server has received a doctor availability request.")
             availableDocs = ""
