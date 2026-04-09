@@ -114,7 +114,7 @@ def handle_client(clientConn):
             if authReply == "SUCCESS":
                 print(f"User with a hash suffix {suffixHash} has been granted access to the system. Determining the access of the user.")
                 
-                if nameHash in doctors:
+                if nameHash in doctors.values():
                     print(f"User with hash suffix {suffixHash} will be granted doctor access.")
                     clientReply = "SUCCESS_DOC"
                 else:
@@ -127,7 +127,8 @@ def handle_client(clientConn):
             clientConn.send(clientReply.encode('utf-8'))
             print(f"Hospital Server has sent the response from Authentication Server to the client using TCP over port {TCP_PORT}.")
 
-        #**************************************************************************** # Purpose: Help the client lookup all available doctors at the moment. 
+        #****************************************************************************
+        #  # Purpose: Help the client lookup all available doctors at the moment. 
         #****************************************************************************
         elif cmd == "LOOKUP" and len(parts) == 2:
             patHash = parts[1]
@@ -146,9 +147,10 @@ def handle_client(clientConn):
             clientConn.send(aptReply.encode('utf-8'))
             print("Hospital Server has sent the doctor lookup to the client.")
 
-        #**************************************************************************** # Purpose: Help the client lookup a specific doctor (Patients only).
         #****************************************************************************
-        elif cmd == "LOOKUP_DOC" and len(parts) == 3:
+        #  # Purpose: Help the client lookup a specific doctor (Patients only).
+        #****************************************************************************
+        elif cmd == "LOOKUP_DOC" and (len(parts) == 2 or len(parts) == 3):
             docName = parts[1]
             patHash = parts[2]
             suffixHash = patHash[-5:]
@@ -166,7 +168,8 @@ def handle_client(clientConn):
             clientConn.send(aptReply.encode('utf-8'))
             print("The Hospital Server has sent the response to the client.")
 
-        #**************************************************************************** # Purpose: Assist the client with scheduling an apt with a requested doctor.
+        #**************************************************************************** 
+        # # Purpose: Assist the client with scheduling an apt with a requested doctor.
         #****************************************************************************
         elif cmd == "SCHEDULE" and len(parts) == 5:
             docName = parts[1]
@@ -188,7 +191,8 @@ def handle_client(clientConn):
             clientConn.send(aptReply.encode('utf-8'))
             print("The hospital server has sent the response to the client.")
 
-        #**************************************************************************** # Purpose: Help the client cancel an appointment they already have/made.
+        #**************************************************************************** 
+        # Purpose: Help the client cancel an appointment they already have/made.
         #****************************************************************************
         elif cmd == "CANCEL" and len(parts) == 2:
             patHash = parts[1]
@@ -207,7 +211,8 @@ def handle_client(clientConn):
             clientConn.send(aptReply.encode('utf-8'))
             print("The hospital server has sent the response to the client.")
 
-        #**************************************************************************** # Purpose: Help the patient lookup a specific apt 
+        #**************************************************************************** 
+        # # Purpose: Help the patient lookup a specific apt 
         #****************************************************************************
         elif cmd == "VIEW_PAT" and len(parts) == 2:
             patHash = parts[1]
@@ -266,7 +271,7 @@ def handle_client(clientConn):
             aptParts = aptReply.split(",")
             
             if aptParts[0] == "FOUND":
-                illness = aptParts[1]
+                illness = aptParts[1].lower()
                 print(f"Acquiring treatment for {illness} from the database.")
                 
                 if illness in treatments:
@@ -292,7 +297,8 @@ def handle_client(clientConn):
             
             print("The hospital server has sent the response to the client.")
 
-        #**************************************************************************** # Purpose: Allow a PATIENT to view their own prescription.
+        #**************************************************************************** 
+        # # Purpose: Allow a PATIENT to view their own prescription.
         #****************************************************************************
         elif cmd == "VIEW_RX_PAT" and len(parts) == 2:
             patHash = parts[1]
@@ -311,7 +317,8 @@ def handle_client(clientConn):
             clientConn.send(presReply.encode('utf-8'))
             print("Hospital server has sent the response to the client.")
 
-        #**************************************************************************** # Purpose: Allow a DOCTOR to view a specific patient's prescription.
+        #**************************************************************************** 
+        # # Purpose: Allow a DOCTOR to view a specific patient's prescription.
         #****************************************************************************
         elif cmd == "VIEW_RX_DOC" and len(parts) == 3:
             docName = parts[1]
@@ -332,7 +339,18 @@ def handle_client(clientConn):
             print("Hospital server has sent the response to the client.")
 
         # Always close the TCP connection when finished serving the current request
-        clientConn.close()
+    clientConn.close()
+
+
+#****************************************************************************
+# Purpose: Main Server Loop 
+#****************************************************************************
+try:
+    print(f"Hospital Server is waiting for clients...")
+    while True:
+        clientConn, clientAddr = tcpSock.accept()
+        client_thread = threading.Thread(target=handle_client, args=(clientConn,))
+        client_thread.start()
 
 # Basic Ctrl C interrupt 
 except KeyboardInterrupt:
