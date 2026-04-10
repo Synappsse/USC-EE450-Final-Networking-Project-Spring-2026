@@ -108,14 +108,16 @@ try:
                 if rx["patientHash"] == patHash:
                     foundRx = rx
                     
-            if foundRx == None or foundRx["frequency"] == "None":
+            if foundRx is None:
                 print("There are no current prescriptions for this user.")
-                response = "NOT_FOUND" #update flag to send back to user
+                response = "NOT_FOUND"
             else:
-                print("A prescription exists for this user.")
-                # Send back the details separated by commas so the Hospital can read it easily
-                response = f"FOUND,{foundRx['doctor']},{foundRx['treatment']},{foundRx['frequency']}" #IF we do have a precription for the user, update the flag and send its info back
-
+                if foundRx["frequency"] == "None":
+                    print("There are no current prescriptions for this user.")
+                else:
+                    print("A prescription exists for this user.")
+                response = f"FOUND,{foundRx['doctor']},{foundRx['treatment']},{foundRx['frequency']}"
+        
         #Respond back to the hospital server with an update to the request
         sock.sendto(response.encode('utf-8'), sender)
 
