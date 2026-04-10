@@ -198,7 +198,8 @@ def handle_client(clientConn):
             patHash = parts[1]
             suffixHash = patHash[-5:]
             
-            print(f"Hospital Server has received a cancel request from user with hash suffix: {suffixHash} to cancel their appointment using TCP over port {TCP_PORT}.")
+            
+            print(f"Hospital Server has received a cancel request from a user with hash suffix {suffixHash} to cancel their appointment using TCP over port {TCP_PORT}.")            
             
             udpMessage = "CANCEL," + patHash
             udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
