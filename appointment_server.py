@@ -198,6 +198,10 @@ try:
             patHash = parts[1]
             suffixHash = patHash[-5:]
             found = False
+
+            #Update to pdf wants “Successfully cancelled appointment." instead of “Successfully canceled appointment.”?
+            print(f"Appointment Server has received a cancel appointment command for the user with hash suffix: {suffixHash}.")
+
             
             #Goes through the doctors in the schedule and confirms if they have an apt with our current patient
             #Once the apt is found, cancel it and break
@@ -213,8 +217,7 @@ try:
                         updateSchedule(schedule) #Force the program to update the appointment.txt file with the new schedule
                         response = f"SUCCESS,{doc},{timeBlock}"
 
-                        #Update to pdf wants “Successfully cancelled appointment." instead of “Successfully canceled appointment.”?
-                        print(f"Appointment Server has received a cancel appointment command for the user with hash suffix: {suffixHash}. Successfully cancelled appointment.")
+                        print("Successfully cancelled appointment.")    
                         break
                 
                 if found == True: 
