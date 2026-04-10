@@ -219,8 +219,8 @@ def handle_client(clientConn):
             patHash = parts[1]
             suffixHash = patHash[-5:]
             
-            print(f"Hospital server has received a view appointment request from a user with hash suffix {suffixHash} to view their appointment details using TCP over port {TCP_PORT}.")
-            
+            print(f"Hospital Server has received a view appointment request from a user with hash suffix {suffixHash} to view their appointment details using TCP over port {TCP_PORT}.")
+
             udpMessage = "VIEW_PAT," + patHash
             udpSock.sendto(udpMessage.encode('utf-8'), (HOST, APT_PORT))
             print("Hospital Server has sent the view appointments request to the Appointment Server.")
@@ -245,7 +245,7 @@ def handle_client(clientConn):
             
             aptReplyBytes, aptSender = udpSock.recvfrom(1024)
             aptReply = aptReplyBytes.decode('utf-8')
-            print(f"Hospital server has received the response from the Appointment server using UDP over port {UDP_PORT}.")
+            print(f"Hospital Server has received the response from the appointment server using UDP over port {UDP_PORT}.")
             
             clientConn.send(aptReply.encode('utf-8'))
             print("The hospital server has sent the response to the client.")
