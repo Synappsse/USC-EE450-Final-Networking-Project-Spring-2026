@@ -33,13 +33,13 @@ D)
 	appointment_server.py:
 			Opens and parses the appointments.txt files in order to manage client requests for looking up doctors as well as scheduling and cancelling 							appointments. Edits appointments.txt based on new updates.
 
-	prescriptions_server.py:
+	prescription_server.py:
 			Opens the prescriptions.txt file to look at and return specific patient prescriptions. Updates the txt file based on changes to the patients 						prescription list.
 		
 	hospital_server.py:	
-			Main backend server that communicates with other backend servers and acts as 			the bridge for the client's program. Once the hospital server receives a 			request, it will forward it to the correct server then retrieve a response. 			Based on the response it will give an appropriate reply to the client.
+			Main backend server that communicates with other backend servers and acts as the bridge for the client's program. Once the hospital server receives a 					quest, it will forward it to the correct server then retrieve a response. Based on the response it will give an appropriate reply to the client.
 	client.py:
-			Program for patient/doctor interface. Users will input their credentials here 			and the program will hash it and send that to the backend servers. Once 			authenticated, users will be given options such as looking at prescriptions, 			scheduling appointments etc.
+			Program for patient/doctor interface. Users will input their credentials here and the program will hash it and send that to the backend servers. Once 					authenticated, users will be given options such as looking at prescriptions, scheduling appointments etc.
 
 
 
@@ -69,10 +69,10 @@ Formatting:
 		CANCEL,<patient_hash>
 	
 	Fetch Illness Request (Hospital -> Appointment Server): 	
-	
 		FETCH_ILLNESS,<patient_hash>,<doctor_username>`
 
-	Prescribe Request (Hospital -> Prescription Server): 							PRESCRIBE,<doctor_username>,<patient_hash>,<treatment>,<frequency>
+	Prescribe Request (Hospital -> Prescription Server): 							
+		PRESCRIBE,<doctor_username>,<patient_hash>,<treatment>,<frequency>
 	
 	View Prescription (Hospital -> Prescription Server): 
 		VIEW_RX,<patient_hash>
@@ -85,7 +85,7 @@ I was a little new to making Makefiles for Python projects on Unix, so there mig
 
 As discussed in some of the Piazza posts, there are certain edge cases that weren't accounted for in the PDF instructions. I did my best with them and just put in the generic failure cases for those. I know however those won't be tested.
 
-I had some trouble fighting with command lengths and reading them over such as whether to have the client type in Dr.X or Dr. X. I should have fixed this but there might be an error relating to it somewhere.
+I had some trouble fighting with command lengths and reading them over such as whether to have the client type in Dr.X or Dr. X. I should have fixed this but there might be an error relating to it somewhere. Particularly code dealing with the length of an inserted command I am not too confident in. 
 
 G)
 
