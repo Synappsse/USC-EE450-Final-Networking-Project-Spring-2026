@@ -18,7 +18,7 @@ def createPresList():
 
             #Split the read file into 4 individual segments per none empty line
             #Each item in out preList becomes a dictionary with the mandatory info
-            parts = line.split(",")
+            parts = line.split()
             if len(parts) == 4:
                 rx = {
                     "doctor": parts[0],
@@ -45,7 +45,7 @@ def addNewPres(docName, patHash, treatment, frequency):
         txtFile = open("prescriptions.txt", "a")
         
         # Using commas to seperate the precriptions to account for first precription failing
-        newPres = f"{docName},{patHash},{treatment},{frequency}\n"
+        newPres = f"\n{docName} {patHash} {treatment} {frequency}\n"
         txtFile.write(newPres)
         txtFile.close()
         
@@ -102,6 +102,7 @@ try:
             
             
             allPrescriptions = createPresList()
+
             foundRx = None #remains false unless patient has prescription
             for rx in allPrescriptions:
                 if rx["patientHash"] == patHash:
