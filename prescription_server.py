@@ -18,7 +18,7 @@ def createPresList():
 
             #Split the read file into 4 individual segments per none empty line
             #Each item in out preList becomes a dictionary with the mandatory info
-            parts = line.split()
+            parts = line.split(",")
             if len(parts) == 4:
                 rx = {
                     "doctor": parts[0],
@@ -42,16 +42,15 @@ def createPresList():
 #****************************************************************************
 def addNewPres(docName, patHash, treatment, frequency):
     try:
-      
         txtFile = open("prescriptions.txt", "a")
         
-        newPres = docName + " " + patHash + " " + treatment + " " + frequency + "\n" 
+        # Using commas to seperate the precriptions to account for first precription failing
+        newPres = f"{docName},{patHash},{treatment},{frequency}\n"
         txtFile.write(newPres)
         txtFile.close()
         
     except Exception as e:
         print("Error saving to prescriptions.txt:", e)
-
 
 #****************************************************************************
 # Purpose: Define constants and bind the UDP socket.
